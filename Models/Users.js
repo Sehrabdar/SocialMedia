@@ -1,4 +1,4 @@
-import {DataTypes} from 'sequelize';
+import {DataTypes, Model} from 'sequelize';
 import sequelize from '../Databases/db.js';
 const User = sequelize.define('User', {
     id: {
@@ -19,6 +19,10 @@ const User = sequelize.define('User', {
             isEmail: true,
         },
     },
+    password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+}
     
 }, {
     timestamps: true,

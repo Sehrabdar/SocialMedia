@@ -1,7 +1,9 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import User from '../Models/Users.js';
 
 const router = express.Router();
+const saltRounds = 10;
 
 router.get('/', async(req, res) => {
     try{
@@ -28,15 +30,33 @@ router.get('/:id', async(req, res) => {
     }
 });
 
-router.post('/', async(req, res) => {
+router.post('/register', async(req, res) => {
+    const {username, email, password} = req.body;
     try{
-        const {username, email} = req.body;
-        const newUser = await User.create({username, email});
-        res.status(201).json(newUser);
+        if (password.length < 8 ||
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/\d/.test(password) ||
+        !/[^A-Za-z0-9]/.test(password)) {
+      return res.status(400).json({ error: 'Password does not meet complexity requirements.' });
+        }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = await User.create({username, email, password: hashedPassword})
+    res.status(201).json({message: 'User created successfully. ', newUser});
     }
-    catch(error){ 
-        res.status(400).json(`Error Occured ${error}`);
-    } 
+    catch(error){
+        if(error.name === 'SequelizeUniqueConstraintError'){
+            res.status(409).json({error: 'Username already exists'});
+        }
+        else if (error.name === 'SequelizeValidationError'){
+            res.status(400).json({error: error.message});
+        }
+        else{
+            res.status(500).json({error: 'Internal Server error.'});
+        }
+    }
+    
 });
 
 router.delete('/:id', async(req, res) => {
