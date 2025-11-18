@@ -2,11 +2,17 @@ import { log, error } from 'console';
 import express from 'express';
 import userRoutes from '../Routes/userRoutes.js';
 import sequelize from '../Databases/db.js';
+import blogRoutes from '../Routes/blogRoutes.js';
+import user from '../Models/Users.js';
+import blogpost from '../Models/Blogpost.js';
+
+
 
 const app = express();
 const port = 3000;
 app.use(express.json());
 app.use('/users', userRoutes);
+app.use('/posts', blogRoutes);
 
 (async() => {
     try{
