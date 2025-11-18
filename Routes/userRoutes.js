@@ -1,6 +1,8 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
+import authToken from '../Middleware/auth.js';
 import User from '../Models/Users.js';
 import config from '../config.js';
 
@@ -17,20 +19,9 @@ router.get('/', async(req, res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
-    try{
-        const user = await User.findByPk(req.params.id);
-        if(!user){
-            return res.status(404).json({error: "User not found."});
-        }
-        else{
-            res.json(user);
-        }
-    }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
-});
+router.get('/profile', authToken, (req, res) => {
+    res.json({user: req.user});
+})
 
 router.post('/register', async(req, res) => {
     const {username, email, password} = req.body;
