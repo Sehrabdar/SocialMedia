@@ -1,6 +1,8 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import User from '../Models/Users.js';
+import config from '../config.js';
 
 const router = express.Router();
 const saltRounds = 10;
@@ -67,6 +69,9 @@ router.post('/login', async(req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if(!isPasswordValid) return res.status(401).json({error: 'Invalid credentials'});
     
+    const token = jwt.sign({id: user.id, username: user.username, email: user.email}, config.jwt.key, {expiresIn: '1h'});
+
+    res.json({message: 'Login Successful', token});
 })
 
 router.delete('/:id', async(req, res) => {

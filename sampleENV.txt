@@ -3,3 +3,4 @@ DB_USER= #database_user
 DB_PASSWORD= #database_password
 DB_HOST= #host_name
 DB_PORT= #db_port
+JWT_SECRET_KEY = #YourSecretKey

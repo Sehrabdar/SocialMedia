@@ -9,6 +9,9 @@ const config = {
         password: process.env.DB_PASSWORD,
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
+    },
+    jwt: {
+        key: process.env.JWT_SECRET_KEY
     }
 };
 
