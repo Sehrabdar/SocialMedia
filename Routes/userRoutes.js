@@ -59,6 +59,16 @@ router.post('/register', async(req, res) => {
     
 });
 
+router.post('/login', async(req, res) => {
+    const {username, email, password} = req.body;
+    const user = await User.findOne({where: {username}});
+    if(!user) return res.status(401).json({error: 'Invalid credentials'});
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if(!isPasswordValid) return res.status(401).json({error: 'Invalid credentials'});
+    
+})
+
 router.delete('/:id', async(req, res) => {
     try{
     const {id} = req.params;
