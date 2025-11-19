@@ -55,6 +55,12 @@ router.post('/register', async(req, res) => {
       return res.status(400).json({ error: 'Password does not meet complexity requirements.' });
         }
 
+        if (username.length < 8 ||
+        !/[A-Z]/.test(username) ||
+        !/[a-z]/.test(username)) {
+      return res.status(400).json({ error: 'Username does not meet complexity requirements.' });
+        }
+
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await User.create({username, email, password: hashedPassword})
     res.status(201).json({message: 'User created successfully. ', newUser});
