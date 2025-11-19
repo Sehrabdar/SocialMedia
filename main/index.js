@@ -5,9 +5,11 @@ import fs from 'fs';
 import userRoutes from '../Routes/userRoutes.js';
 import sequelize from '../Databases/db.js';
 import blogRoutes from '../Routes/blogRoutes.js';
+import pictureRoutes from '../Routes/postPicsRoutes.js';
 import user from '../Models/Users.js';
 import blogpost from '../Models/Blogpost.js';
-import profileRoute from '../Routes/profilePic.js';
+import PostPicture from '../Models/postPictures.js';
+import profileRoute from '../Routes/profilePicRoutes.js';
 
 
 
@@ -17,12 +19,18 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/posts', blogRoutes);
 app.use('/profile', profileRoute);
+app.use('/post-pics', pictureRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 const uploadPath = path.join(process.cwd(), 'uploads/profilepics');
+const uploadPath2 = path.join(process.cwd(), 'uploads/post_pics');
 
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
+}
+if (!fs.existsSync(uploadPath2)) {
+  fs.mkdirSync(uploadPath2, { recursive: true });
 }
 
 (async() => {
