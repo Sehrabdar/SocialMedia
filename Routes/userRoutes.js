@@ -19,6 +19,27 @@ router.get('/', async(req, res) => {
     }
 });
 
+router.patch('/:id', authToken, async(req, res) => {
+    try{
+    const user = await User.findByPk(req.params.id);
+    if(!user){
+        res.json({message: 'user not found'});
+    }
+    if(user.id !== req.user.id) {
+        return res.status(403).json({message: 'Not Authorized'});
+    }
+        user.email = req.body.email != undefined ? req.body.email : user.email;
+        user.username = req.body.username != undefined ? req.body.username : user.username;
+
+        await user.save();
+        res.json({ message: 'User info updated.', user });
+    }catch(error){
+    
+    res.status(500).json({message: 'Internal Server Error'});
+    }   
+});
+
+
 router.get('/profile', authToken, (req, res) => {
     res.json({user: req.user});
 })
