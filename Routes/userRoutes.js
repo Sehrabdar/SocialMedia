@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import authToken from '../Middleware/auth.js';
 import User from '../Models/Users.js';
 import config from '../config.js';
+import userValidator from '../Middleware/Validations/userName-validator.js';
+import passwordValidator from '../Middleware/Validations/password-validator.js';
 
 const router = express.Router();
 const saltRounds = 10;
@@ -44,28 +46,11 @@ router.get('/profile', authToken, (req, res) => {
     res.json({user: req.user});
 })
 
-router.post('/register', async(req, res) => {
+router.post('/register', passwordValidator, userValidator, async(req, res) => {
     const {username, email, password} = req.body;
-    try{
-        if (password.length < 8 ||
-        !/[A-Z]/.test(password) ||
-        !/[a-z]/.test(password) ||
-        !/\d/.test(password) ||
-        !/[^A-Za-z0-9]/.test(password)) {
-      return res.status(400).json({ error: 'Password does not meet complexity requirements.' });
-        }
-
-        if (username.length < 8 ||
-        !/[A-Z]/.test(username) ||
-        !/[a-z]/.test(username)) {
-      return res.status(400).json({ error: 'Username does not meet complexity requirements.' });
-        }
-
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await User.create({username, email, password: hashedPassword})
     res.status(201).json({message: 'User created successfully. ', newUser});
-    }
-    catch(error){
         if(error.name === 'SequelizeUniqueConstraintError'){
             res.status(409).json({error: 'Username already exists'});
         }
@@ -75,7 +60,6 @@ router.post('/register', async(req, res) => {
         else{
             res.status(500).json({error: 'Internal Server error.'});
         }
-    }
     
 });
 
