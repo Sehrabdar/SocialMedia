@@ -1,10 +1,12 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 
 import authToken from '../Middleware/auth.js';
 import User from '../Models/Users.js';
-import config from '../config.js';
+import config from '../Middleware/Configs/envConfig.js';
+import upload from '../Middleware/Configs/multerConfig.js';
 import userValidator from '../Middleware/Validations/userName-validator.js';
 import passwordValidator from '../Middleware/Validations/password-validator.js';
 
@@ -46,12 +48,19 @@ router.get('/profile', authToken, (req, res) => {
     res.json({user: req.user});
 })
 
-router.post('/register', passwordValidator, userValidator, async(req, res) => {
+router.post('/register', upload.single('image'), passwordValidator, userValidator, async(req, res) => {
     const {username, email, password} = req.body;
+    const profilePic = req.file ? req.file.path : null;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = await User.create({username, email, password: hashedPassword})
-    res.status(201).json({message: 'User created successfully. ', newUser});
-        if(error.name === 'SequelizeUniqueConstraintError'){
+    
+    const user = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+        profilePic,
+    });
+    res.status(201).json({message: 'User registration successful', user});
+    if(error.name === 'SequelizeUniqueConstraintError'){
             res.status(409).json({error: 'Username already exists'});
         }
         else if (error.name === 'SequelizeValidationError'){
@@ -60,7 +69,8 @@ router.post('/register', passwordValidator, userValidator, async(req, res) => {
         else{
             res.status(500).json({error: 'Internal Server error.'});
         }
-    
+
+
 });
 
 router.post('/login', async(req, res) => {

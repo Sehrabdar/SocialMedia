@@ -9,7 +9,7 @@ import pictureRoutes from '../Routes/postPicsRoutes.js';
 import user from '../Models/Users.js';
 import blogpost from '../Models/Blogpost.js';
 import PostPicture from '../Models/postPictures.js';
-import profileRoute from '../Routes/profilePicRoutes.js';
+
 
 
 
@@ -18,7 +18,6 @@ const port = 3000;
 app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/posts', blogRoutes);
-app.use('/profile', profileRoute);
 app.use('/post-pics', pictureRoutes);
 app.use('/uploads', express.static('uploads'));
 
