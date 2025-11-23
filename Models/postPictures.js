@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../Databases/db.js";
+import sequelize from "../Database/db.js";
 
 const PostPicture = sequelize.define('postPicture', {
     url: {

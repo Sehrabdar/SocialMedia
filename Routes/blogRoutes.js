@@ -1,7 +1,7 @@
 import express from 'express';
 import authToken from '../Middleware/auth.js';
-import blogpost from '../Models/Blogpost.js';
-import user from '../Models/Users.js';
+import blogpost from '../Models/blogpost.js';
+import user from '../Models/users.js';
 
 const router = express.Router();
 

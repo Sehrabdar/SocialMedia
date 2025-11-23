@@ -1,6 +1,6 @@
 import { DataTypes, Sequelize } from "sequelize";
-import sequelize from "../Databases/db.js";
-import user from "./Users.js";
+import sequelize from "../Database/db.js";
+import user from "./users.js";
 
 const blogpost = sequelize.define('blogpost', {
     title: DataTypes.STRING,

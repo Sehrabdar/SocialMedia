@@ -3,11 +3,11 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import userRoutes from '../Routes/userRoutes.js';
-import sequelize from '../Databases/db.js';
+import sequelize from '../Database/db.js';
 import blogRoutes from '../Routes/blogRoutes.js';
 import pictureRoutes from '../Routes/postPicsRoutes.js';
-import user from '../Models/Users.js';
-import blogpost from '../Models/Blogpost.js';
+import user from '../Models/users.js';
+import blogpost from '../Models/blogpost.js';
 import PostPicture from '../Models/postPictures.js';
 
 

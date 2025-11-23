@@ -2,9 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import authToken from '../Middleware/auth.js';
-import User from '../Models/Users.js';
+import User from '../Models/users.js';
 import PostPicture from '../Models/postPictures.js';
-import blogpost from '../Models/Blogpost.js';
+import blogpost from '../Models/blogpost.js';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 
 import authToken from '../Middleware/auth.js';
-import User from '../Models/Users.js';
+import User from '../Models/users.js';
 import config from '../Middleware/Configs/envConfig.js';
 import upload from '../Middleware/Configs/multerConfig.js';
 import userValidator from '../Middleware/Validations/userName-validator.js';
