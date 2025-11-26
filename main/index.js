@@ -6,11 +6,9 @@ import userRoutes from '../Routes/userRoutes.js';
 import sequelize from '../Database/db.js';
 import postRoutes from '../Routes/postRoutes.js';
 import user from '../Models/users.js';
+import Session from '../Models/session.js';
 import blogpost from '../Models/blogpost.js';
 import PostPicture from '../Models/postPictures.js';
-
-
-
 
 const app = express();
 const port = 3000;

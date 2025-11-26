@@ -5,10 +5,13 @@ import path from 'path';
 
 import authToken from '../Middleware/auth.js';
 import User from '../Models/users.js';
+import Session from '../Models/session.js';
 import config from '../Middleware/Configs/envConfig.js';
 import upload from '../Middleware/Configs/multerConfig.js';
 import userValidator from '../Middleware/Validations/userName-validator.js';
 import passwordValidator from '../Middleware/Validations/password-validator.js';
+import sequelize from '../Database/db.js';
+
 
 const router = express.Router();
 const saltRounds = 10;
@@ -74,17 +77,39 @@ router.post('/register', upload.single('image'), passwordValidator, userValidato
 });
 
 router.post('/login', async(req, res) => {
+    const t = await sequelize.transaction();
+    try{
     const {username, email, password} = req.body;
     const user = await User.findOne({where: {username}});
-    if(!user) return res.status(401).json({error: 'Invalid credentials'});
+    if(!user){
+        await t.rollback();
+        return res.status(401).json({error: 'Invalid credentials'});
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if(!isPasswordValid) return res.status(401).json({error: 'Invalid credentials'});
+    if(!isPasswordValid) {
+        await t.rollback();
+        return res.status(401).json({error: 'Invalid credentials'});
+    }
+    const session = await Session.create(
+        {userId: user.id, ipAddress:req.ip, loginTime: new Date()},
+        {transaction: t}
+    );
     
     const token = jwt.sign({id: user.id, username: user.username, email: user.email}, config.jwt.key, {expiresIn: '1h'});
+    await User.update(
+        {lastLogin: new Date()},
+        {where: {id: user.id}, transaction: t}
+    );
+
+    await t.commit();
 
     res.json({message: 'Login Successful', token});
-})
+    } catch(error){
+        await t.rollback();
+        res.status(500).json({message: 'Login failed', error: error.message});
+    }  
+});
 
 router.delete('/:id', async(req, res) => {
     try{

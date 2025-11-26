@@ -13,7 +13,5 @@ const blogpost = sequelize.define('blogpost', {
 
 user.hasMany(blogpost, {foreignKey: 'userid'});
 blogpost.belongsTo(user, {foreignKey: 'userid'});
-// blogpost.belongsTo(user, {foreignKey: 'userid'});
-// blogpost.hasMany(user, {foreignKey: 'userid'});
 
 export default blogpost;
