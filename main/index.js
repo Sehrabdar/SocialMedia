@@ -4,8 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import userRoutes from '../Routes/userRoutes.js';
 import sequelize from '../Database/db.js';
-import blogRoutes from '../Routes/blogRoutes.js';
-import pictureRoutes from '../Routes/postPicsRoutes.js';
+import postRoutes from '../Routes/postRoutes.js';
 import user from '../Models/users.js';
 import blogpost from '../Models/blogpost.js';
 import PostPicture from '../Models/postPictures.js';
@@ -17,8 +16,7 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 app.use('/users', userRoutes);
-app.use('/posts', blogRoutes);
-app.use('/post-pics', pictureRoutes);
+app.use('', postRoutes);
 app.use('/uploads', express.static('uploads'));
 
 
